@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Cars.Models;
+using Cars.ViewModels;
 
 namespace Cars.Controllers
 {
@@ -20,6 +21,33 @@ namespace Cars.Controllers
             var vehicles = db.Vehicles.Include(v => v.VehicleType);
             return View(vehicles.ToList());
         }
+
+
+        // GET: Vehicles/Cart/5
+        public ActionResult Cart(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Vehicle vehicle = db.Vehicles.Find(id);
+            if (vehicle == null)
+            {
+                return HttpNotFound();
+            }
+
+            VehicleVM vm = new VehicleVM();
+            vm.Make = vehicle.Make;
+            vm.Model = vehicle.Model;
+            vm.Year = vehicle.Year;
+            vm.Price = 25101;
+            vm.Tax = vm.Price * 0.08;  //replace with call to .Business project
+              
+            return View(vm);
+        }
+
+
+
 
         // GET: Vehicles/Details/5
         public ActionResult Details(int? id)
